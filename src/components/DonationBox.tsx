@@ -66,7 +66,7 @@ export function DonationBox() {
         publicClient.readContract({ address: vaultAddress, abi: ABI, functionName: "donorCount" }),
         address
           ? publicClient.readContract({ address: vaultAddress, abi: ABI, functionName: "donorAmount", args: [address] })
-          : Promise.resolve(0n),
+          : Promise.resolve(BigInt(0)),
         publicClient.readContract({ address: vaultAddress, abi: ABI, functionName: "owner" }),
       ]);
       setBalance(formatEther(bal as bigint));
