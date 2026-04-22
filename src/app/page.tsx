@@ -13,6 +13,7 @@ import { BridgeLinks } from "@/components/BridgeLinks";
 import { Footer } from "@/components/Footer";
 import { TxHistory } from "@/components/TxHistory";
 import { ActiveOnBase } from "@/components/ActiveOnBase";
+import { ContractInteractor } from "@/components/ContractInteractor";
 
 const GUILD_ROLES = [
   {
@@ -152,6 +153,7 @@ export default function Home() {
               <h2 className="text-base font-semibold text-gray-300">On-chain Actions</h2>
               <SendTransaction />
               <DeployContract />
+              <ContractInteractor />
             </div>
 
             {/* Tx history */}
