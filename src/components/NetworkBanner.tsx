@@ -2,10 +2,20 @@
 
 import { useAccount, useSwitchChain } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 export function NetworkBanner() {
   const { chainId, isConnected } = useAccount();
   const { switchChain } = useSwitchChain();
+  const isOnline = useOnlineStatus();
+
+  if (!isOnline) {
+    return (
+      <div className="text-center text-sm py-2 px-4 bg-orange-950 text-orange-300">
+        ⚠ No internet connection — on-chain data may be stale
+      </div>
+    );
+  }
 
   if (!isConnected) return null;
 
