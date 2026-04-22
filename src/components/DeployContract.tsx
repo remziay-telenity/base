@@ -89,7 +89,27 @@ export function DeployContract() {
     setDeployedAddress(receipt.contractAddress);
   }
 
+  function validate(): string | null {
+    if (selected === "token") {
+      if (!fields.tokenName?.trim()) return "Token Name is required";
+      if (!fields.tokenSymbol?.trim()) return "Symbol is required";
+      const supply = Number(fields.tokenSupply);
+      if (fields.tokenSupply && (isNaN(supply) || supply <= 0))
+        return "Initial Supply must be a positive number";
+    }
+    if (selected === "nft") {
+      if (!fields.nftName?.trim()) return "Collection Name is required";
+      if (!fields.nftSymbol?.trim()) return "Symbol is required";
+    }
+    return null;
+  }
+
   function handleDeploy() {
+    const validationError = validate();
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
     const onError = (e: Error) => toast.error(e.message?.split("\n")[0] || "Deploy failed");
 
     if (selected === "counter") {
@@ -99,8 +119,8 @@ export function DeployContract() {
         abi: tokenArtifact.abi as never,
         bytecode: tokenArtifact.bytecode as `0x${string}`,
         args: [
-          fields.tokenName || "My Token",
-          fields.tokenSymbol || "MTK",
+          fields.tokenName!.trim(),
+          fields.tokenSymbol!.trim(),
           BigInt(fields.tokenSupply || "1000000"),
         ],
       }, { onError });
@@ -108,7 +128,7 @@ export function DeployContract() {
       deployContract({
         abi: nftArtifact.abi as never,
         bytecode: nftArtifact.bytecode as `0x${string}`,
-        args: [fields.nftName || "My NFT", fields.nftSymbol || "MNFT"],
+        args: [fields.nftName!.trim(), fields.nftSymbol!.trim()],
       }, { onError });
     }
   }
@@ -161,18 +181,31 @@ export function DeployContract() {
       {/* Dynamic fields */}
       {template.fields.length > 0 && (
         <div className="space-y-2">
-          {template.fields.map((f) => (
-            <div key={f.name}>
-              <label className="text-xs text-gray-400 mb-1 block">{f.label}</label>
-              <input
-                type={f.type}
-                placeholder={f.placeholder}
-                value={fields[f.name] || ""}
-                onChange={(e) => setFields((prev) => ({ ...prev, [f.name]: e.target.value }))}
-                className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition"
-              />
-            </div>
-          ))}
+          {template.fields.map((f) => {
+            const isRequired = f.type !== "number";
+            const isEmpty = isRequired && !fields[f.name]?.trim();
+            return (
+              <div key={f.name}>
+                <label className="text-xs text-gray-400 mb-1 block">
+                  {f.label}
+                  {isRequired && <span className="text-red-500 ml-0.5">*</span>}
+                </label>
+                <input
+                  type={f.type}
+                  placeholder={f.placeholder}
+                  value={fields[f.name] || ""}
+                  onChange={(e) => setFields((prev) => ({ ...prev, [f.name]: e.target.value }))}
+                  aria-required={isRequired}
+                  aria-invalid={isEmpty ? "true" : undefined}
+                  className={`w-full bg-[#1a1a1a] border rounded-lg px-3 py-2 text-sm focus:outline-none transition ${
+                    isEmpty
+                      ? "border-red-800 focus:border-red-500"
+                      : "border-[#333] focus:border-purple-500"
+                  }`}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
 
