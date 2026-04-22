@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useAccount,
   useWaitForTransactionReceipt,
@@ -8,10 +8,13 @@ import {
 } from "wagmi";
 import { base } from "wagmi/chains";
 import { COUNTER_ABI, COUNTER_BYTECODE } from "@/lib/contracts";
+import { useDeployedContracts, CONTRACT_MILESTONES } from "@/hooks/useDeployedContracts";
 
 export function DeployContract() {
   const { address, chainId } = useAccount();
   const [deployedAddress, setDeployedAddress] = useState<string>("");
+  const { count, isLoading: statsLoading, error: statsError, refetch: refetchStats } =
+    useDeployedContracts();
 
   const { deployContract, data: txHash, isPending, error } = useDeployContract();
   const { isLoading: isConfirming, isSuccess, data: receipt } =
@@ -30,6 +33,10 @@ export function DeployContract() {
     });
   }
 
+  useEffect(() => {
+    if (isSuccess) refetchStats();
+  }, [isSuccess]);
+
   if (isSuccess && receipt?.contractAddress && !deployedAddress) {
     setDeployedAddress(receipt.contractAddress);
   }
@@ -45,6 +52,11 @@ export function DeployContract() {
           <p className="text-sm text-gray-400">
             Unlocks: Builders &amp; Founders roles (1/5/10 contracts deployed)
           </p>
+          {count > 0 && (
+            <span className="text-xs text-gray-500 mt-0.5">
+              {count} deployed so far
+            </span>
+          )}
         </div>
         {isSuccess && (
           <span className="ml-auto text-green-400 text-sm font-medium">
@@ -82,6 +94,26 @@ export function DeployContract() {
           ? "Deploying..."
           : "Deploy Counter Contract"}
       </button>
+
+      {/* Milestones */}
+      {!statsLoading && !statsError && (
+        <div className="space-y-2">
+          <p className="text-xs text-gray-400 uppercase tracking-wider">Milestones</p>
+          {CONTRACT_MILESTONES.map((milestone) => {
+            const done = count >= milestone;
+            return (
+              <div key={milestone} className="flex items-center justify-between text-sm">
+                <span className={done ? "text-green-400" : "text-gray-400"}>
+                  {done ? "✓ " : ""}{milestone} contract{milestone > 1 ? "s" : ""} deployed
+                </span>
+                <span className={done ? "text-green-400 font-medium" : "text-gray-600"}>
+                  {done ? "complete" : `${count}/${milestone}`}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {txHash && (
         <div className="bg-[#1a1a1a] rounded-lg p-3 text-sm space-y-2">
