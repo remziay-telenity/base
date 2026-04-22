@@ -34,10 +34,15 @@ npm install
 cp .env.local.example .env.local
 ```
 
-Edit `.env.local` and add your WalletConnect Project ID (free at [cloud.walletconnect.com](https://cloud.walletconnect.com)):
+Edit `.env.local` and fill in:
 
 ```
+# Required — get free at https://cloud.walletconnect.com
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
+
+# Optional — get free at https://basescan.org/myapikey
+# Enables deployed contracts count; tx count falls back to on-chain nonce without it
+NEXT_PUBLIC_BASESCAN_API_KEY=your_basescan_api_key_here
 ```
 
 ### 3. Run the dev server
