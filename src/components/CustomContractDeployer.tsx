@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAccount, useDeployContract, useWaitForTransactionReceipt } from "wagmi";
 import { txUrl, addressUrl } from "@/lib/explorer";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { ContractInteractPanel } from "@/components/ContractInteractPanel";
 import toast from "react-hot-toast";
 
 const EXAMPLE = `// SPDX-License-Identifier: MIT
@@ -252,6 +253,15 @@ export function CustomContractDeployer() {
             </div>
           )}
         </div>
+      )}
+
+      {/* Interact panel — appears after deployment */}
+      {deployedAddress && contract && (
+        <ContractInteractPanel
+          contractAddress={deployedAddress as `0x${string}`}
+          abi={contract.abi as never}
+          chainId={chainId}
+        />
       )}
     </div>
   );
