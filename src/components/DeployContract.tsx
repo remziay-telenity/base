@@ -112,8 +112,8 @@ export function DeployContract() {
     }
     const onError = (e: Error) => {
       const msg = e.message || "";
-      if (msg.includes("params[0].to") || msg.includes("required field")) {
-        toast.error("WalletConnect doesn't support deployment — switch to MetaMask or Coinbase Wallet");
+      if (msg.includes("params[0].to") || msg.includes("required field") || msg.includes("to is a required")) {
+        toast.error(`${connector?.name ?? "This wallet"} doesn't support deployment — use MetaMask or Coinbase Wallet browser extension`);
       } else {
         toast.error(msg.split("\n")[0] || "Deploy failed");
       }
@@ -240,23 +240,41 @@ export function DeployContract() {
         <p className="text-red-400 text-sm">{error.message?.split("\n")[0] || "Deploy failed"}</p>
       )}
 
-      {/* WalletConnect v2 rejects contract deployments (no `to` field in eth_sendTransaction).
-          Detect this early and guide the user to switch to MetaMask or Coinbase Wallet. */}
-      {connector?.id === "walletConnect" && (
+      {/* Smart wallets (Base Wallet, Coinbase Smart Wallet) and WalletConnect v2 both
+          reject eth_sendTransaction without a `to` field, which contract deployments
+          require. Only browser-injected wallets (MetaMask, Coinbase browser extension)
+          process raw deployment transactions locally without that schema validation. */}
+      {connector && connector.type !== "injected" && (
         <div className="bg-yellow-950/60 border border-yellow-800 rounded-lg px-3 py-2.5 text-xs text-yellow-300 space-y-1">
-          <p className="font-semibold">⚠ WalletConnect doesn't support contract deployment</p>
+          <p className="font-semibold">⚠ {connector.name} doesn't support contract deployment</p>
           <p className="text-yellow-400">
-            WalletConnect v2 rejects transactions without a recipient address, which is required
-            for contract creation. Please switch to{" "}
-            <span className="font-medium text-yellow-200">MetaMask</span> or{" "}
-            <span className="font-medium text-yellow-200">Coinbase Wallet</span> to deploy.
+            Smart wallets and WalletConnect reject deployment transactions (no recipient address).
+            To deploy contracts, please use a browser extension wallet:{" "}
+            <a
+              href="https://metamask.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-yellow-200 underline"
+            >
+              MetaMask
+            </a>
+            {" or "}
+            <a
+              href="https://www.coinbase.com/wallet/downloads"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-yellow-200 underline"
+            >
+              Coinbase Wallet (browser extension)
+            </a>
+            .
           </p>
         </div>
       )}
 
       <button
         onClick={handleDeploy}
-        disabled={!address || isPending || isConfirming || connector?.id === "walletConnect"}
+        disabled={!address || isPending || isConfirming || (connector?.type !== "injected" && !!connector)}
         className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-2.5 font-semibold text-sm transition focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
       >
         {isPending ? "Waiting for approval…" : isConfirming ? "Deploying…" : `Deploy ${template.label}`}
