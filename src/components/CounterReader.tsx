@@ -40,7 +40,7 @@ export function CounterReader() {
           value={contractAddr}
           onChange={(e) => setContractAddr(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && validAddr && refetch()}
-          className="flex-1 bg-[#3d3d3d] border border-[#666] rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-purple-500 transition"
+          className="flex-1 bg-[#333] border border-[#555] rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none focus:border-purple-500 transition"
           aria-label="Counter contract address for reading"
         />
         <button
