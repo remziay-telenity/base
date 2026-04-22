@@ -98,6 +98,7 @@ export function SendTransaction() {
             Recipient Address
           </label>
           <input
+            style={{ background: "#fff", color: "#000", border: "1px solid #888", borderRadius: "8px", padding: "8px 12px", width: "100%", fontSize: "14px", boxSizing: "border-box" }}
             placeholder="0x..."
             value={to}
             onChange={(e) => setTo(e.target.value)}
@@ -124,6 +125,7 @@ export function SendTransaction() {
             Amount (ETH)
           </label>
           <input
+            style={{ background: "#fff", color: "#000", border: "1px solid #888", borderRadius: "8px", padding: "8px 12px", width: "100%", fontSize: "14px", boxSizing: "border-box" }}
             placeholder="0.0001"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
