@@ -141,9 +141,10 @@ export function CustomContractDeployer() {
           placeholder={"// Paste your Solidity contract here\npragma solidity ^0.8.20;\n\ncontract MyContract { ... }"}
           style={{
             width: "100%",
-            background: "#1a1a1a",
-            color: "#e5e7eb",
-            border: "1px solid #333",
+            background: "#fff",
+            color: "#000",
+            WebkitTextFillColor: "#000",
+            border: "1px solid #555",
             borderRadius: "8px",
             padding: "12px",
             fontSize: "13px",
