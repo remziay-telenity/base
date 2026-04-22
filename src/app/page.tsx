@@ -10,6 +10,7 @@ import { OnchainStats } from "@/components/OnchainStats";
 import { BasenameChecker } from "@/components/BasenameChecker";
 import { HoldingTracker } from "@/components/HoldingTracker";
 import { BridgeLinks } from "@/components/BridgeLinks";
+import { Footer } from "@/components/Footer";
 
 const GUILD_ROLES = [
   {
@@ -179,5 +180,6 @@ export default function Home() {
         )}
       </main>
     </div>
+    <Footer />
   );
 }
