@@ -41,6 +41,7 @@ export async function fetchDeployedContracts(
 
 export interface TxRecord {
   hash: string;
+  from: string;
   to: string;
   contractAddress: string;
   blockNumber: string;
