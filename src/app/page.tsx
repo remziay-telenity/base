@@ -1,0 +1,164 @@
+"use client";
+
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
+import { SendTransaction } from "@/components/SendTransaction";
+import { DeployContract } from "@/components/DeployContract";
+import { NetworkBanner } from "@/components/NetworkBanner";
+import { RoleCard } from "@/components/RoleCard";
+
+const GUILD_ROLES = [
+  {
+    name: "Onchain",
+    description: "Hold ≥0.001 ETH AND have ≥1 transaction on Base",
+    category: "Home",
+    categoryColor: "bg-blue-900 text-blue-300",
+    feature: "send",
+  },
+  {
+    name: "Based: 10 transactions",
+    description: "Complete 10 transactions on Base",
+    category: "Onchain",
+    categoryColor: "bg-blue-900 text-blue-300",
+    feature: "send",
+  },
+  {
+    name: "Based: 50 transactions",
+    description: "Complete 50 transactions on Base",
+    category: "Onchain",
+    categoryColor: "bg-blue-900 text-blue-300",
+    feature: "send",
+  },
+  {
+    name: "Based: 100 transactions",
+    description: "Complete 100 transactions on Base",
+    category: "Onchain",
+    categoryColor: "bg-blue-900 text-blue-300",
+    feature: "send",
+  },
+  {
+    name: "Based: 1,000 transactions",
+    description: "Complete 1,000 transactions on Base",
+    category: "Onchain",
+    categoryColor: "bg-blue-900 text-blue-300",
+    feature: "send",
+  },
+  {
+    name: "Builders & Founders (1 contract)",
+    description: "Deploy 1 smart contract on Base",
+    category: "Builders",
+    categoryColor: "bg-purple-900 text-purple-300",
+    feature: "deploy",
+  },
+  {
+    name: "Builders & Founders (5 contracts)",
+    description: "Deploy 5 smart contracts on Base",
+    category: "Builders",
+    categoryColor: "bg-purple-900 text-purple-300",
+    feature: "deploy",
+  },
+  {
+    name: "Builders & Founders (10+ contracts)",
+    description: "Deploy 10 or more smart contracts on Base",
+    category: "Builders",
+    categoryColor: "bg-purple-900 text-purple-300",
+    feature: "deploy",
+  },
+];
+
+export default function Home() {
+  const { isConnected } = useAccount();
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <NetworkBanner />
+
+      <header className="border-b border-[#1a1a1a] px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-sm">
+            B
+          </div>
+          <div>
+            <h1 className="font-bold text-base leading-tight">
+              Base Guild Helper
+            </h1>
+            <p className="text-xs text-gray-500">guild.xyz/base</p>
+          </div>
+        </div>
+        <ConnectButton
+          showBalance={false}
+          chainStatus="icon"
+          accountStatus="avatar"
+        />
+      </header>
+
+      <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8 space-y-8">
+        {!isConnected ? (
+          <div className="text-center space-y-4 py-16">
+            <div className="text-5xl">⛓️</div>
+            <h2 className="text-2xl font-bold">Connect your wallet</h2>
+            <p className="text-gray-400 max-w-sm mx-auto">
+              Connect a wallet to start completing Base Guild roles on-chain.
+            </p>
+            <div className="flex justify-center mt-4">
+              <ConnectButton />
+            </div>
+          </div>
+        ) : (
+          <>
+            <div>
+              <h2 className="text-xl font-bold mb-1">Complete Roles</h2>
+              <p className="text-sm text-gray-400">
+                Use the actions below to earn on-chain credentials for{" "}
+                <a
+                  href="https://guild.xyz/base"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:underline"
+                >
+                  guild.xyz/base
+                </a>
+                . Guild verifies your on-chain activity automatically.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <SendTransaction />
+              <DeployContract />
+            </div>
+
+            <div>
+              <h2 className="text-xl font-bold mb-3">
+                Roles unlocked by these actions
+              </h2>
+              <div className="space-y-2">
+                {GUILD_ROLES.map((role) => (
+                  <RoleCard
+                    key={role.name}
+                    name={role.name}
+                    description={role.description}
+                    category={role.category}
+                    categoryColor={role.categoryColor}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-3">
+                Guild.xyz automatically detects your on-chain activity. After
+                completing actions, visit{" "}
+                <a
+                  href="https://guild.xyz/base"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:underline"
+                >
+                  guild.xyz/base
+                </a>{" "}
+                and connect the same wallet to claim your roles.
+              </p>
+            </div>
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
