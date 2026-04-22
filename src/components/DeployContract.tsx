@@ -19,7 +19,7 @@ interface ContractTemplate {
   description: string;
   color: string;
   preview: string;
-  fields: { name: string; label: string; placeholder: string; type: string }[];
+  fields: { name: string; label: string; placeholder: string; type: string; optional?: boolean }[];
 }
 
 const TEMPLATES: ContractTemplate[] = [
@@ -36,11 +36,12 @@ const TEMPLATES: ContractTemplate[] = [
     label: "ERC-20 Token",
     description: "Fungible token with custom name & supply",
     color: "bg-yellow-600",
-    preview: `contract SimpleToken {\n  string public name;\n  string public symbol;\n  uint256 public totalSupply;\n  // standard ERC-20 functions\n}`,
+    preview: `contract SimpleToken {\n  string public name;\n  string public symbol;\n  uint256 public totalSupply;\n  uint256 public feeBps; // 0 = no fee\n  // standard ERC-20 functions\n}`,
     fields: [
       { name: "tokenName", label: "Token Name", placeholder: "My Token", type: "text" },
       { name: "tokenSymbol", label: "Symbol", placeholder: "MTK", type: "text" },
       { name: "tokenSupply", label: "Initial Supply", placeholder: "1000000", type: "number" },
+      { name: "tokenFee", label: "Transfer Fee % (optional, 0–10)", placeholder: "0", type: "number", optional: true },
     ],
   },
   {
@@ -96,6 +97,9 @@ export function DeployContract() {
       const supply = Number(fields.tokenSupply);
       if (fields.tokenSupply && (isNaN(supply) || supply <= 0))
         return "Initial Supply must be a positive number";
+      const fee = fields.tokenFee ? Number(fields.tokenFee) : 0;
+      if (isNaN(fee) || fee < 0 || fee > 10)
+        return "Transfer Fee must be between 0 and 10%";
     }
     if (selected === "nft") {
       if (!fields.nftName?.trim()) return "Collection Name is required";
@@ -122,6 +126,8 @@ export function DeployContract() {
     if (selected === "counter") {
       deployContract({ abi: COUNTER_ABI, bytecode: COUNTER_BYTECODE, args: [] }, { onError });
     } else if (selected === "token") {
+      // Convert fee % to basis points (e.g. 1.5% → 150 bps). Default 0 = no fee.
+      const feeBps = BigInt(Math.round((Number(fields.tokenFee) || 0) * 100));
       deployContract({
         abi: tokenArtifact.abi as never,
         bytecode: tokenArtifact.bytecode as `0x${string}`,
@@ -129,6 +135,7 @@ export function DeployContract() {
           fields.tokenName!.trim(),
           fields.tokenSymbol!.trim(),
           BigInt(fields.tokenSupply || "1000000"),
+          feeBps,
         ],
       }, { onError });
     } else if (selected === "nft") {
@@ -189,7 +196,7 @@ export function DeployContract() {
       {template.fields.length > 0 && (
         <div className="space-y-2">
           {template.fields.map((f) => {
-            const isRequired = f.type !== "number";
+            const isRequired = !f.optional && f.type !== "number";
             const isEmpty = isRequired && !fields[f.name]?.trim();
             return (
               <div key={f.name}>
