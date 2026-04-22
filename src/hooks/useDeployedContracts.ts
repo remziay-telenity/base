@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { fetchDeployedContracts, TxRecord } from "@/lib/basescan";
 
@@ -44,11 +44,7 @@ export function useDeployedContracts(): DeployedContractsStats {
     load();
   }, [address, chainId, apiKey, tick]);
 
-  return {
-    contracts,
-    count: contracts.length,
-    isLoading,
-    error,
-    refetch: () => setTick((t) => t + 1),
-  };
+  const refetch = useCallback(() => setTick((t) => t + 1), []);
+
+  return { contracts, count: contracts.length, isLoading, error, refetch };
 }

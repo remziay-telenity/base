@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount, useBalance, usePublicClient } from "wagmi";
 import { fetchTxList } from "@/lib/basescan";
 
@@ -78,15 +78,12 @@ export function useTransactionStats(): TransactionStats {
     load();
   }, [address, chainId, apiKey, tick]);
 
-  const ethBalance = balanceData
-    ? parseFloat(balanceData.formatted).toFixed(4)
-    : null;
+  const ethBalance = useMemo(
+    () => (balanceData ? parseFloat(balanceData.formatted).toFixed(4) : null),
+    [balanceData]
+  );
 
-  return {
-    txCount,
-    ethBalance,
-    isLoading,
-    error,
-    refetch: () => setTick((t) => t + 1),
-  };
+  const refetch = useCallback(() => setTick((t) => t + 1), []);
+
+  return { txCount, ethBalance, isLoading, error, refetch };
 }

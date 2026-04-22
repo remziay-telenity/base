@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { fetchTxList, TxRecord } from "@/lib/basescan";
 
@@ -46,5 +46,6 @@ export function useTxHistory(limit = 10): TxHistoryResult {
     load();
   }, [address, chainId, apiKey, limit, tick]);
 
-  return { txs, isLoading, error, refetch: () => setTick((t) => t + 1) };
+  const refetch = useCallback(() => setTick((t) => t + 1), []);
+  return { txs, isLoading, error, refetch };
 }
