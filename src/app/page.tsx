@@ -17,6 +17,7 @@ import { ContractInteractor } from "@/components/ContractInteractor";
 import { CounterReader } from "@/components/CounterReader";
 import { GuildRoleStatus } from "@/components/GuildRoleStatus";
 import { CustomContractDeployer } from "@/components/CustomContractDeployer";
+import { DonationBox } from "@/components/DonationBox";
 
 const GUILD_ROLES = [
   {
@@ -159,6 +160,7 @@ export default function Home() {
               <ContractInteractor />
               <CounterReader />
               <CustomContractDeployer />
+              <DonationBox />
             </div>
 
             {/* Guild role status summary */}
