@@ -11,6 +11,7 @@ import { BasenameChecker } from "@/components/BasenameChecker";
 import { HoldingTracker } from "@/components/HoldingTracker";
 import { BridgeLinks } from "@/components/BridgeLinks";
 import { Footer } from "@/components/Footer";
+import { TxHistory } from "@/components/TxHistory";
 
 const GUILD_ROLES = [
   {
@@ -150,6 +151,9 @@ export default function Home() {
               <SendTransaction />
               <DeployContract />
             </div>
+
+            {/* Tx history */}
+            <TxHistory />
 
             {/* Useful links */}
             <BridgeLinks />
