@@ -93,20 +93,22 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <NetworkBanner />
 
-      <header className="border-b border-[#1a1a1a] px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-sm">
+      <header className="border-b border-[#1a1a1a] px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-600 flex-shrink-0 flex items-center justify-center font-bold text-xs sm:text-sm">
             B
           </div>
-          <div>
-            <h1 className="font-bold text-base leading-tight">Base Guild Helper</h1>
-            <p className="text-xs text-gray-500">guild.xyz/base</p>
+          <div className="min-w-0">
+            <h1 className="font-bold text-sm sm:text-base leading-tight truncate">Base Guild Helper</h1>
+            <p className="text-xs text-gray-500 hidden sm:block">guild.xyz/base</p>
           </div>
         </div>
-        <ConnectButton showBalance={false} chainStatus="icon" accountStatus="avatar" />
+        <div className="flex-shrink-0">
+          <ConnectButton showBalance={false} chainStatus="icon" accountStatus="avatar" />
+        </div>
       </header>
 
-      <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8 space-y-8">
+      <main className="flex-1 max-w-2xl mx-auto w-full px-3 sm:px-4 py-6 sm:py-8 space-y-6 sm:space-y-8">
         {!isConnected ? (
           <div className="text-center space-y-4 py-16">
             <div className="text-5xl">⛓️</div>
