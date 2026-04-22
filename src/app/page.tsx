@@ -12,6 +12,7 @@ import { HoldingTracker } from "@/components/HoldingTracker";
 import { BridgeLinks } from "@/components/BridgeLinks";
 import { Footer } from "@/components/Footer";
 import { TxHistory } from "@/components/TxHistory";
+import { ActiveOnBase } from "@/components/ActiveOnBase";
 
 const GUILD_ROLES = [
   {
@@ -143,6 +144,7 @@ export default function Home() {
               <h2 className="text-base font-semibold text-gray-300">Check & Earn Roles</h2>
               <BasenameChecker />
               <HoldingTracker />
+              <ActiveOnBase />
             </div>
 
             {/* Actions */}
