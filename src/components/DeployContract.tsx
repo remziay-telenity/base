@@ -251,7 +251,7 @@ export function DeployContract() {
           reject eth_sendTransaction without a `to` field, which contract deployments
           require. Only browser-injected wallets (MetaMask, Coinbase browser extension)
           process raw deployment transactions locally without that schema validation. */}
-      {connector && connector.type !== "injected" && (
+      {connector && connector.type !== "injected" && !connector.name?.toLowerCase().includes("metamask") && (
         <div className="bg-yellow-950/60 border border-yellow-800 rounded-lg px-3 py-2.5 text-xs text-yellow-300 space-y-1">
           <p className="font-semibold">⚠ {connector.name} doesn't support contract deployment</p>
           <p className="text-yellow-400">
@@ -281,7 +281,7 @@ export function DeployContract() {
 
       <button
         onClick={handleDeploy}
-        disabled={!address || isPending || isConfirming || (connector?.type !== "injected" && !!connector)}
+        disabled={!address || isPending || isConfirming || (connector?.type !== "injected" && !connector?.name?.toLowerCase().includes("metamask") && !!connector)}
         className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-2.5 font-semibold text-sm transition focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
       >
         {isPending ? "Waiting for approval…" : isConfirming ? "Deploying…" : `Deploy ${template.label}`}
