@@ -91,7 +91,7 @@ export default function Home() {
   const { isConnected } = useAccount();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
       <NetworkBanner />
 
       <header className="border-b border-[#1a1a1a] px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
@@ -179,7 +179,7 @@ export default function Home() {
           </>
         )}
       </main>
+      <Footer />
     </div>
-    <Footer />
   );
 }
