@@ -8,6 +8,7 @@ import {
 } from "wagmi";
 import { parseEther, isAddress } from "viem";
 import { useTransactionStats } from "@/hooks/useTransactionStats";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { txUrl } from "@/lib/explorer";
 import toast from "react-hot-toast";
 
@@ -16,6 +17,10 @@ export function SendTransaction() {
   const [to, setTo] = useState("");
   const [amount, setAmount] = useState("0.0001");
   const [txError, setTxError] = useState("");
+  const [recentAddresses, setRecentAddresses] = useLocalStorage<string[]>(
+    "base-guild:recent-recipients",
+    []
+  );
 
   const { sendTransaction, data: txHash, isPending } = useSendTransaction();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
@@ -38,6 +43,12 @@ export function SendTransaction() {
       toast.error(msg);
       return;
     }
+    // Persist recipient to recent addresses (max 5, deduplicated)
+    setRecentAddresses((prev) => {
+      const filtered = prev.filter((a) => a.toLowerCase() !== to.toLowerCase());
+      return [to, ...filtered].slice(0, 5);
+    });
+
     try {
       sendTransaction(
         { to: to as `0x${string}`, value: parseEther(amount || "0") },
@@ -91,7 +102,23 @@ export function SendTransaction() {
             placeholder="0x..."
             value={to}
             onChange={(e) => setTo(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            aria-label="Recipient address"
           />
+          {recentAddresses.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {recentAddresses.map((addr) => (
+                <button
+                  key={addr}
+                  onClick={() => setTo(addr)}
+                  className="text-xs font-mono text-gray-500 hover:text-gray-300 bg-[#1a1a1a] border border-[#2a2a2a] rounded px-1.5 py-0.5 transition"
+                  aria-label={`Use recent address ${addr}`}
+                >
+                  {addr.slice(0, 6)}…{addr.slice(-4)}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div>
           <label className="text-sm text-gray-400 mb-1 block">
@@ -102,9 +129,11 @@ export function SendTransaction() {
             placeholder="0.0001"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
             type="number"
             step="0.0001"
             min="0"
+            aria-label="Amount in ETH"
           />
         </div>
 
