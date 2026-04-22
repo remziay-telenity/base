@@ -8,6 +8,11 @@ vi.mock("wagmi", () => ({
   useAccount: () => ({ address: "0xUser", chainId: 8453 }),
 }));
 
+// Pass debounced value through immediately in tests
+vi.mock("@/hooks/useDebounce", () => ({
+  useDebounce: (value: unknown) => value,
+}));
+
 vi.mock("@/hooks/useReadContract", () => ({
   useReadContract: vi.fn(),
 }));

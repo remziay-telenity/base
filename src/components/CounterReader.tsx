@@ -4,14 +4,16 @@ import { useState } from "react";
 import { isAddress } from "viem";
 import { useAccount } from "wagmi";
 import { useReadContract } from "@/hooks/useReadContract";
+import { useDebounce } from "@/hooks/useDebounce";
 import { COUNTER_ABI } from "@/lib/contracts";
 
 export function CounterReader() {
   const { address } = useAccount();
   const [contractAddr, setContractAddr] = useState("");
+  const debouncedAddr = useDebounce(contractAddr, 400);
 
-  const validAddr = isAddress(contractAddr)
-    ? (contractAddr as `0x${string}`)
+  const validAddr = isAddress(debouncedAddr)
+    ? (debouncedAddr as `0x${string}`)
     : undefined;
 
   const { data: count, isLoading, error, refetch } = useReadContract<bigint>(
