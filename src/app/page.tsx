@@ -15,6 +15,7 @@ import { TxHistory } from "@/components/TxHistory";
 import { ActiveOnBase } from "@/components/ActiveOnBase";
 import { ContractInteractor } from "@/components/ContractInteractor";
 import { CounterReader } from "@/components/CounterReader";
+import { GuildRoleStatus } from "@/components/GuildRoleStatus";
 
 const GUILD_ROLES = [
   {
@@ -157,6 +158,9 @@ export default function Home() {
               <ContractInteractor />
               <CounterReader />
             </div>
+
+            {/* Guild role status summary */}
+            <GuildRoleStatus />
 
             {/* Tx history */}
             <TxHistory />
