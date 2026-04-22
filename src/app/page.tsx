@@ -6,6 +6,7 @@ import { SendTransaction } from "@/components/SendTransaction";
 import { DeployContract } from "@/components/DeployContract";
 import { NetworkBanner } from "@/components/NetworkBanner";
 import { RoleCard } from "@/components/RoleCard";
+import { OnchainStats } from "@/components/OnchainStats";
 
 const GUILD_ROLES = [
   {
@@ -121,6 +122,8 @@ export default function Home() {
                 . Guild verifies your on-chain activity automatically.
               </p>
             </div>
+
+            <OnchainStats />
 
             <div className="space-y-4">
               <SendTransaction />
