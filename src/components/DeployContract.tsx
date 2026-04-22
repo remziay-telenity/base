@@ -5,6 +5,7 @@ import { useAccount, useWaitForTransactionReceipt, useDeployContract } from "wag
 import { base } from "wagmi/chains";
 import { COUNTER_ABI, COUNTER_BYTECODE } from "@/lib/contracts";
 import { useDeployedContracts, CONTRACT_MILESTONES } from "@/hooks/useDeployedContracts";
+import toast from "react-hot-toast";
 import counterArtifact from "@/lib/counterArtifact.json";
 import tokenArtifact from "@/lib/simpleTokenArtifact.json";
 import nftArtifact from "@/lib/simpleNFTArtifact.json";
@@ -71,7 +72,10 @@ export function DeployContract() {
   const template = TEMPLATES.find((t) => t.id === selected)!;
 
   useEffect(() => {
-    if (isSuccess) refetchStats();
+    if (isSuccess) {
+      refetchStats();
+      toast.success(`${template.label} deployed successfully!`);
+    }
   }, [isSuccess]);
 
   useEffect(() => {
@@ -85,8 +89,10 @@ export function DeployContract() {
   }
 
   function handleDeploy() {
+    const onError = (e: Error) => toast.error(e.message?.split("\n")[0] || "Deploy failed");
+
     if (selected === "counter") {
-      deployContract({ abi: COUNTER_ABI, bytecode: COUNTER_BYTECODE, args: [] });
+      deployContract({ abi: COUNTER_ABI, bytecode: COUNTER_BYTECODE, args: [] }, { onError });
     } else if (selected === "token") {
       deployContract({
         abi: tokenArtifact.abi as never,
@@ -96,13 +102,13 @@ export function DeployContract() {
           fields.tokenSymbol || "MTK",
           BigInt(fields.tokenSupply || "1000000"),
         ],
-      });
+      }, { onError });
     } else if (selected === "nft") {
       deployContract({
         abi: nftArtifact.abi as never,
         bytecode: nftArtifact.bytecode as `0x${string}`,
         args: [fields.nftName || "My NFT", fields.nftSymbol || "MNFT"],
-      });
+      }, { onError });
     }
   }
 
