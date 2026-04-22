@@ -160,7 +160,6 @@ export default function Home() {
               <ContractInteractor />
               <CounterReader />
               <CustomContractDeployer />
-              <DonationBox />
             </div>
 
             {/* Guild role status summary */}
@@ -193,6 +192,17 @@ export default function Home() {
                 </a>{" "}
                 and connect the same wallet to claim your roles.
               </p>
+            </div>
+
+            {/* Support section — bottom of page */}
+            <div className="space-y-3">
+              <div className="border-t border-[#222] pt-6">
+                <h2 className="text-base font-semibold text-gray-300 mb-1">Support this App</h2>
+                <p className="text-sm text-gray-500 mb-4">
+                  If this tool helped you earn your Base Guild roles, consider leaving a small donation to keep it running.
+                </p>
+                <DonationBox />
+              </div>
             </div>
           </>
         )}
