@@ -7,63 +7,82 @@ import { DeployContract } from "@/components/DeployContract";
 import { NetworkBanner } from "@/components/NetworkBanner";
 import { RoleCard } from "@/components/RoleCard";
 import { OnchainStats } from "@/components/OnchainStats";
+import { BasenameChecker } from "@/components/BasenameChecker";
+import { HoldingTracker } from "@/components/HoldingTracker";
+import { BridgeLinks } from "@/components/BridgeLinks";
 
 const GUILD_ROLES = [
+  {
+    name: "Based",
+    description: "Own a Basename on Base network",
+    category: "Home",
+    categoryColor: "bg-indigo-900 text-indigo-300",
+  },
   {
     name: "Onchain",
     description: "Hold ≥0.001 ETH AND have ≥1 transaction on Base",
     category: "Home",
     categoryColor: "bg-blue-900 text-blue-300",
-    feature: "send",
+  },
+  {
+    name: "Holding: $1+",
+    description: "Hold $1 or more in assets on Base",
+    category: "Onchain",
+    categoryColor: "bg-emerald-900 text-emerald-300",
+  },
+  {
+    name: "Holding: $100+",
+    description: "Hold $100 or more in assets on Base",
+    category: "Onchain",
+    categoryColor: "bg-emerald-900 text-emerald-300",
+  },
+  {
+    name: "Holding: $1,000+",
+    description: "Hold $1,000 or more in assets on Base",
+    category: "Onchain",
+    categoryColor: "bg-emerald-900 text-emerald-300",
   },
   {
     name: "Based: 10 transactions",
     description: "Complete 10 transactions on Base",
     category: "Onchain",
     categoryColor: "bg-blue-900 text-blue-300",
-    feature: "send",
   },
   {
     name: "Based: 50 transactions",
     description: "Complete 50 transactions on Base",
     category: "Onchain",
     categoryColor: "bg-blue-900 text-blue-300",
-    feature: "send",
   },
   {
     name: "Based: 100 transactions",
     description: "Complete 100 transactions on Base",
     category: "Onchain",
     categoryColor: "bg-blue-900 text-blue-300",
-    feature: "send",
   },
   {
     name: "Based: 1,000 transactions",
     description: "Complete 1,000 transactions on Base",
     category: "Onchain",
     categoryColor: "bg-blue-900 text-blue-300",
-    feature: "send",
   },
   {
     name: "Builders & Founders (1 contract)",
     description: "Deploy 1 smart contract on Base",
     category: "Builders",
     categoryColor: "bg-purple-900 text-purple-300",
-    feature: "deploy",
   },
   {
     name: "Builders & Founders (5 contracts)",
     description: "Deploy 5 smart contracts on Base",
     category: "Builders",
     categoryColor: "bg-purple-900 text-purple-300",
-    feature: "deploy",
   },
   {
     name: "Builders & Founders (10+ contracts)",
     description: "Deploy 10 or more smart contracts on Base",
     category: "Builders",
     categoryColor: "bg-purple-900 text-purple-300",
-    feature: "deploy",
   },
 ];
 
@@ -80,17 +99,11 @@ export default function Home() {
             B
           </div>
           <div>
-            <h1 className="font-bold text-base leading-tight">
-              Base Guild Helper
-            </h1>
+            <h1 className="font-bold text-base leading-tight">Base Guild Helper</h1>
             <p className="text-xs text-gray-500">guild.xyz/base</p>
           </div>
         </div>
-        <ConnectButton
-          showBalance={false}
-          chainStatus="icon"
-          accountStatus="avatar"
-        />
+        <ConnectButton showBalance={false} chainStatus="icon" accountStatus="avatar" />
       </header>
 
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8 space-y-8">
@@ -111,29 +124,36 @@ export default function Home() {
               <h2 className="text-xl font-bold mb-1">Complete Roles</h2>
               <p className="text-sm text-gray-400">
                 Use the actions below to earn on-chain credentials for{" "}
-                <a
-                  href="https://guild.xyz/base"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline"
-                >
+                <a href="https://guild.xyz/base" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
                   guild.xyz/base
                 </a>
                 . Guild verifies your on-chain activity automatically.
               </p>
             </div>
 
+            {/* Stats overview */}
             <OnchainStats />
 
+            {/* Role-specific cards */}
+            <div className="space-y-3">
+              <h2 className="text-base font-semibold text-gray-300">Check & Earn Roles</h2>
+              <BasenameChecker />
+              <HoldingTracker />
+            </div>
+
+            {/* Actions */}
             <div className="space-y-4">
+              <h2 className="text-base font-semibold text-gray-300">On-chain Actions</h2>
               <SendTransaction />
               <DeployContract />
             </div>
 
+            {/* Useful links */}
+            <BridgeLinks />
+
+            {/* Role checklist */}
             <div>
-              <h2 className="text-xl font-bold mb-3">
-                Roles unlocked by these actions
-              </h2>
+              <h2 className="text-xl font-bold mb-3">Roles unlocked by this app</h2>
               <div className="space-y-2">
                 {GUILD_ROLES.map((role) => (
                   <RoleCard
@@ -146,14 +166,8 @@ export default function Home() {
                 ))}
               </div>
               <p className="text-xs text-gray-500 mt-3">
-                Guild.xyz automatically detects your on-chain activity. After
-                completing actions, visit{" "}
-                <a
-                  href="https://guild.xyz/base"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline"
-                >
+                After completing actions, visit{" "}
+                <a href="https://guild.xyz/base" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
                   guild.xyz/base
                 </a>{" "}
                 and connect the same wallet to claim your roles.
