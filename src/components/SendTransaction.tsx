@@ -9,6 +9,7 @@ import {
 import { parseEther, isAddress } from "viem";
 import { base } from "wagmi/chains";
 import { useTransactionStats } from "@/hooks/useTransactionStats";
+import toast from "react-hot-toast";
 
 export function SendTransaction() {
   const { address, chainId } = useAccount();
@@ -25,22 +26,35 @@ export function SendTransaction() {
   const isBaseMainnet = chainId === base.id;
 
   useEffect(() => {
-    if (isSuccess) refetchStats();
+    if (isSuccess) {
+      refetchStats();
+      toast.success("Transaction confirmed! Stats will update shortly.");
+    }
   }, [isSuccess]);
 
   async function handleSend() {
     setTxError("");
     if (!isAddress(to)) {
-      setTxError("Invalid recipient address");
+      const msg = "Invalid recipient address";
+      setTxError(msg);
+      toast.error(msg);
       return;
     }
     try {
-      sendTransaction({
-        to: to as `0x${string}`,
-        value: parseEther(amount || "0"),
-      });
+      sendTransaction(
+        { to: to as `0x${string}`, value: parseEther(amount || "0") },
+        {
+          onError: (e) => {
+            const msg = e.message?.split("\n")[0] || "Transaction failed";
+            setTxError(msg);
+            toast.error(msg);
+          },
+        }
+      );
     } catch (e: unknown) {
-      setTxError(e instanceof Error ? e.message : "Transaction failed");
+      const msg = e instanceof Error ? e.message : "Transaction failed";
+      setTxError(msg);
+      toast.error(msg);
     }
   }
 
