@@ -14,6 +14,7 @@ import { Footer } from "@/components/Footer";
 import { TxHistory } from "@/components/TxHistory";
 import { ActiveOnBase } from "@/components/ActiveOnBase";
 import { ContractInteractor } from "@/components/ContractInteractor";
+import { CounterReader } from "@/components/CounterReader";
 
 const GUILD_ROLES = [
   {
@@ -154,6 +155,7 @@ export default function Home() {
               <SendTransaction />
               <DeployContract />
               <ContractInteractor />
+              <CounterReader />
             </div>
 
             {/* Tx history */}
