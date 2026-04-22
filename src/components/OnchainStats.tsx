@@ -2,6 +2,7 @@
 
 import { useTransactionStats, TX_MILESTONES } from "@/hooks/useTransactionStats";
 import { TxProgressBar } from "./TxProgressBar";
+import { Skeleton } from "./LoadingSkeleton";
 
 export function OnchainStats() {
   const { txCount, ethBalance, isLoading, error, refetch } = useTransactionStats();
@@ -23,24 +24,40 @@ export function OnchainStats() {
       </div>
 
       {error && (
-        <p className="text-xs text-red-400">{error}</p>
+        <div className="flex items-center justify-between bg-red-950/40 border border-red-900 rounded-xl px-4 py-3">
+          <p className="text-xs text-red-400">{error}</p>
+          <button
+            onClick={refetch}
+            className="text-xs text-red-400 hover:text-red-300 underline ml-4"
+          >
+            Retry
+          </button>
+        </div>
       )}
 
       {/* ETH Balance */}
       <div className="flex items-center justify-between p-3 bg-[#1a1a1a] rounded-xl">
         <div>
           <p className="text-xs text-gray-400">ETH Balance</p>
-          <p className="text-lg font-bold">
-            {ethBalance !== null ? `${ethBalance} ETH` : "—"}
-          </p>
-          <p className="text-xs text-gray-500">Need ≥0.001 ETH for Onchain role</p>
+          {isLoading ? (
+            <Skeleton className="h-6 w-32 mt-1" />
+          ) : (
+            <p className="text-lg font-bold">
+              {ethBalance !== null ? `${ethBalance} ETH` : "—"}
+            </p>
+          )}
+          <p className="text-xs text-gray-500 mt-0.5">Need ≥0.001 ETH for Onchain role</p>
         </div>
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-            hasEnoughEth ? "bg-green-900 text-green-400" : "bg-[#222] text-gray-500"
+          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition ${
+            isLoading
+              ? "bg-[#222] text-transparent"
+              : hasEnoughEth
+              ? "bg-green-900 text-green-400"
+              : "bg-[#222] text-gray-500"
           }`}
         >
-          {hasEnoughEth ? "✓" : "✗"}
+          {!isLoading && (hasEnoughEth ? "✓" : "✗")}
         </div>
       </div>
 
@@ -52,31 +69,38 @@ export function OnchainStats() {
             <span className="text-xs text-green-400 font-medium">Onchain role ✓</span>
           )}
         </div>
-        <p className="text-3xl font-bold tabular-nums">
-          {isLoading ? (
-            <span className="text-gray-600 text-xl">Loading…</span>
-          ) : txCount !== null ? (
-            txCount.toLocaleString()
-          ) : (
-            "—"
-          )}
-        </p>
+        {isLoading ? (
+          <Skeleton className="h-10 w-24 mt-1" />
+        ) : (
+          <p className="text-3xl font-bold tabular-nums">
+            {txCount !== null ? txCount.toLocaleString() : "—"}
+          </p>
+        )}
       </div>
 
       {/* Milestones */}
-      {txCount !== null && (
-        <div className="space-y-3">
-          <p className="text-xs text-gray-400 uppercase tracking-wider">Milestones</p>
-          {TX_MILESTONES.map((milestone, i) => (
-            <TxProgressBar
-              key={milestone}
-              count={txCount}
-              milestone={milestone}
-              prevMilestone={i === 0 ? 0 : TX_MILESTONES[i - 1]}
-            />
-          ))}
-        </div>
-      )}
+      <div className="space-y-3">
+        <p className="text-xs text-gray-400 uppercase tracking-wider">Milestones</p>
+        {isLoading
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="space-y-1">
+                <div className="flex justify-between">
+                  <Skeleton className="h-3 w-32" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+                <Skeleton className="h-1.5 w-full rounded-full" />
+              </div>
+            ))
+          : txCount !== null &&
+            TX_MILESTONES.map((milestone, i) => (
+              <TxProgressBar
+                key={milestone}
+                count={txCount}
+                milestone={milestone}
+                prevMilestone={i === 0 ? 0 : TX_MILESTONES[i - 1]}
+              />
+            ))}
+      </div>
     </div>
   );
 }
