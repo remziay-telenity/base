@@ -57,7 +57,7 @@ const TEMPLATES: ContractTemplate[] = [
 ];
 
 export function DeployContract() {
-  const { address, chainId } = useAccount();
+  const { address, chainId, connector } = useAccount();
   const [selected, setSelected] = useState<ContractType>("counter");
   const [fields, setFields] = useState<Record<string, string>>({});
   const [deployedAddress, setDeployedAddress] = useState<string>("");
@@ -110,7 +110,14 @@ export function DeployContract() {
       toast.error(validationError);
       return;
     }
-    const onError = (e: Error) => toast.error(e.message?.split("\n")[0] || "Deploy failed");
+    const onError = (e: Error) => {
+      const msg = e.message || "";
+      if (msg.includes("params[0].to") || msg.includes("required field")) {
+        toast.error("WalletConnect doesn't support deployment — switch to MetaMask or Coinbase Wallet");
+      } else {
+        toast.error(msg.split("\n")[0] || "Deploy failed");
+      }
+    };
 
     if (selected === "counter") {
       deployContract({ abi: COUNTER_ABI, bytecode: COUNTER_BYTECODE, args: [] }, { onError });
@@ -233,9 +240,23 @@ export function DeployContract() {
         <p className="text-red-400 text-sm">{error.message?.split("\n")[0] || "Deploy failed"}</p>
       )}
 
+      {/* WalletConnect v2 rejects contract deployments (no `to` field in eth_sendTransaction).
+          Detect this early and guide the user to switch to MetaMask or Coinbase Wallet. */}
+      {connector?.id === "walletConnect" && (
+        <div className="bg-yellow-950/60 border border-yellow-800 rounded-lg px-3 py-2.5 text-xs text-yellow-300 space-y-1">
+          <p className="font-semibold">⚠ WalletConnect doesn't support contract deployment</p>
+          <p className="text-yellow-400">
+            WalletConnect v2 rejects transactions without a recipient address, which is required
+            for contract creation. Please switch to{" "}
+            <span className="font-medium text-yellow-200">MetaMask</span> or{" "}
+            <span className="font-medium text-yellow-200">Coinbase Wallet</span> to deploy.
+          </p>
+        </div>
+      )}
+
       <button
         onClick={handleDeploy}
-        disabled={!address || isPending || isConfirming}
+        disabled={!address || isPending || isConfirming || connector?.id === "walletConnect"}
         className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-2.5 font-semibold text-sm transition focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
       >
         {isPending ? "Waiting for approval…" : isConfirming ? "Deploying…" : `Deploy ${template.label}`}
