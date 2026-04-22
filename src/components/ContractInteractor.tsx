@@ -57,7 +57,7 @@ export function ContractInteractor() {
             setAddrError("");
           }}
           onKeyDown={(e) => e.key === "Enter" && handleIncrement()}
-          className={`w-full bg-[#1a1a1a] border rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none transition ${
+          className={`w-full bg-[#2a2a2a] border rounded-lg px-3 py-2 text-sm font-mono text-white focus:outline-none transition ${
             addrError ? "border-red-700 focus:border-red-500" : "border-[#333] focus:border-purple-500"
           }`}
           aria-label="Counter contract address"
