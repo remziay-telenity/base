@@ -87,7 +87,7 @@ export function SendTransaction() {
             Recipient Address
           </label>
           <input
-            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono focus:outline-none focus:border-blue-500 transition"
+            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-blue-500 transition"
             placeholder="0x..."
             value={to}
             onChange={(e) => setTo(e.target.value)}
@@ -98,7 +98,7 @@ export function SendTransaction() {
             Amount (ETH)
           </label>
           <input
-            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono focus:outline-none focus:border-blue-500 transition"
+            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-blue-500 transition"
             placeholder="0.0001"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
@@ -111,8 +111,9 @@ export function SendTransaction() {
         <div className="text-xs text-gray-500">
           Tip: You can send to yourself (
           <button
-            className="text-blue-400 hover:underline"
+            className="text-blue-400 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 rounded"
             onClick={() => address && setTo(address)}
+            aria-label="Use my wallet address as recipient"
           >
             use my address
           </button>
@@ -126,7 +127,7 @@ export function SendTransaction() {
         <button
           onClick={handleSend}
           disabled={!address || isPending || isConfirming}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-2.5 font-semibold text-sm transition"
+          className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-2.5 font-semibold text-sm transition focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
         >
           {isPending
             ? "Waiting for approval..."
