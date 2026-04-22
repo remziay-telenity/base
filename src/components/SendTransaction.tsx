@@ -7,8 +7,8 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { parseEther, isAddress } from "viem";
-import { base } from "wagmi/chains";
 import { useTransactionStats } from "@/hooks/useTransactionStats";
+import { txUrl } from "@/lib/explorer";
 import toast from "react-hot-toast";
 
 export function SendTransaction() {
@@ -22,8 +22,6 @@ export function SendTransaction() {
     hash: txHash,
   });
   const { txCount, refetch: refetchStats } = useTransactionStats();
-
-  const isBaseMainnet = chainId === base.id;
 
   useEffect(() => {
     if (isSuccess) {
@@ -58,9 +56,6 @@ export function SendTransaction() {
     }
   }
 
-  const explorerBase = isBaseMainnet
-    ? "https://basescan.org/tx/"
-    : "https://sepolia.basescan.org/tx/";
 
   return (
     <div className="bg-[#111] border border-[#222] rounded-2xl p-6 space-y-4">
@@ -145,7 +140,7 @@ export function SendTransaction() {
         <div className="bg-[#1a1a1a] rounded-lg p-3 text-sm space-y-1">
           <p className="text-gray-400">Transaction hash:</p>
           <a
-            href={`${explorerBase}${txHash}`}
+            href={txUrl(chainId, txHash)}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-400 hover:underline font-mono text-xs break-all"

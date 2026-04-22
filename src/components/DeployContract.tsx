@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useAccount, useWaitForTransactionReceipt, useDeployContract } from "wagmi";
-import { base } from "wagmi/chains";
 import { COUNTER_ABI, COUNTER_BYTECODE } from "@/lib/contracts";
 import { useDeployedContracts, CONTRACT_MILESTONES } from "@/hooks/useDeployedContracts";
+import { txUrl, addressUrl } from "@/lib/explorer";
 import toast from "react-hot-toast";
 import counterArtifact from "@/lib/counterArtifact.json";
 import tokenArtifact from "@/lib/simpleTokenArtifact.json";
@@ -67,8 +67,6 @@ export function DeployContract() {
   const { count, isLoading: statsLoading, error: statsError, refetch: refetchStats } =
     useDeployedContracts();
 
-  const isBaseMainnet = chainId === base.id;
-  const explorerBase = isBaseMainnet ? "https://basescan.org" : "https://sepolia.basescan.org";
   const template = TEMPLATES.find((t) => t.id === selected)!;
 
   useEffect(() => {
@@ -210,7 +208,7 @@ export function DeployContract() {
           <div>
             <p className="text-gray-400">Deploy transaction:</p>
             <a
-              href={`${explorerBase}/tx/${txHash}`}
+              href={txUrl(chainId, txHash)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-purple-400 hover:underline font-mono text-xs break-all"
@@ -222,7 +220,7 @@ export function DeployContract() {
             <div>
               <p className="text-gray-400">Contract deployed at:</p>
               <a
-                href={`${explorerBase}/address/${deployedAddress}`}
+                href={addressUrl(chainId, deployedAddress)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-green-400 hover:underline font-mono text-xs break-all"
