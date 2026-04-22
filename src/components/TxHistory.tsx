@@ -3,20 +3,9 @@
 import { useAccount } from "wagmi";
 import { useTxHistory } from "@/hooks/useTxHistory";
 import { txUrl } from "@/lib/explorer";
+import { shortHash, timeAgo } from "@/lib/format";
 import { Skeleton } from "./LoadingSkeleton";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-
-function timeAgo(timestamp: string): string {
-  const seconds = Math.floor(Date.now() / 1000) - parseInt(timestamp);
-  if (seconds < 60) return `${seconds}s ago`;
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
-  return `${Math.floor(seconds / 86400)}d ago`;
-}
-
-function shortHash(hash: string): string {
-  return `${hash.slice(0, 8)}…${hash.slice(-6)}`;
-}
 
 interface TxRowProps {
   tx: { hash: string; timeStamp: string; isError: string };
