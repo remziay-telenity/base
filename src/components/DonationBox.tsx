@@ -16,6 +16,9 @@ import toast from "react-hot-toast";
 const ABI = artifact.abi as never;
 const BYTECODE = artifact.bytecode as `0x${string}`;
 
+// Pre-deployed vault — users go straight to donate screen
+const DEFAULT_VAULT = "0xa9a6ab325898F4047a5413DA4430c0750fa50dAD" as `0x${string}`;
+
 export function DonationBox() {
   const { address, chainId } = useAccount();
   const publicClient = usePublicClient();
@@ -26,7 +29,7 @@ export function DonationBox() {
     useWaitForTransactionReceipt({ hash: deployTxHash });
 
   // Vault state
-  const [vaultAddress, setVaultAddress] = useState<`0x${string}` | "">("");
+  const [vaultAddress, setVaultAddress] = useState<`0x${string}` | "">(DEFAULT_VAULT);
   const [vaultInput, setVaultInput] = useState("");
   const [balance, setBalance] = useState<string | null>(null);
   const [totalDonations, setTotalDonations] = useState<string | null>(null);
@@ -261,12 +264,19 @@ export function DonationBox() {
           </div>
 
           {/* Owner withdraw */}
-          {isOwner && (
-            <div className="bg-yellow-950/30 border border-yellow-800/50 rounded-lg p-3 space-y-2">
-              <p className="text-xs text-yellow-400 font-semibold">👑 You are the vault owner</p>
+          {/* Owner-only panel */}
+          {isOwner ? (
+            <div className="bg-yellow-950/30 border border-yellow-600/50 rounded-lg p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-base">👑</span>
+                <div>
+                  <p className="text-sm font-semibold text-yellow-400">Owner Panel</p>
+                  <p className="text-xs text-yellow-600">Only visible to the vault owner</p>
+                </div>
+              </div>
               <button
                 onClick={handleWithdraw}
-                disabled={isWithdrawing || balance === "0"}
+                disabled={isWithdrawing || balance === "0.000000"}
                 className="w-full bg-yellow-700 hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-2 text-sm font-semibold transition"
               >
                 {isWithdrawing ? "Withdrawing…" : `Withdraw all (${Number(balance ?? 0).toFixed(6)} ETH)`}
@@ -277,6 +287,10 @@ export function DonationBox() {
                 </a>
               )}
             </div>
+          ) : (
+            <p className="text-xs text-center text-gray-600">
+              Donations are securely held in the smart contract on Base
+            </p>
           )}
         </div>
       )}
