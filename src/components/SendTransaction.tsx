@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useAccount,
   useSendTransaction,
   useWaitForTransactionReceipt,
-  usePublicClient,
 } from "wagmi";
 import { parseEther, isAddress } from "viem";
 import { base } from "wagmi/chains";
+import { useTransactionStats } from "@/hooks/useTransactionStats";
 
 export function SendTransaction() {
   const { address, chainId } = useAccount();
@@ -20,9 +20,13 @@ export function SendTransaction() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
   });
-  const client = usePublicClient();
+  const { txCount, refetch: refetchStats } = useTransactionStats();
 
   const isBaseMainnet = chainId === base.id;
+
+  useEffect(() => {
+    if (isSuccess) refetchStats();
+  }, [isSuccess]);
 
   async function handleSend() {
     setTxError("");
@@ -55,6 +59,11 @@ export function SendTransaction() {
           <p className="text-sm text-gray-400">
             Unlocks: Onchain role, Based: 10/50/100/1000 tx roles
           </p>
+          {txCount !== null && (
+            <span className="text-xs text-gray-500 mt-0.5">
+              {txCount.toLocaleString()} txs so far
+            </span>
+          )}
         </div>
         {isSuccess && (
           <span className="ml-auto text-green-400 text-sm font-medium">
