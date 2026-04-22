@@ -98,7 +98,7 @@ export function SendTransaction() {
             Recipient Address
           </label>
           <input
-            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-blue-500 transition"
             placeholder="0x..."
             value={to}
             onChange={(e) => setTo(e.target.value)}
@@ -125,7 +125,7 @@ export function SendTransaction() {
             Amount (ETH)
           </label>
           <input
-            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-2 text-sm font-mono text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus:border-blue-500 transition"
             placeholder="0.0001"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}

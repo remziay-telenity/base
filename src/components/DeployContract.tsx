@@ -211,7 +211,7 @@ export function DeployContract() {
                   onChange={(e) => setFields((prev) => ({ ...prev, [f.name]: e.target.value }))}
                   aria-required={isRequired}
                   aria-invalid={isEmpty ? "true" : undefined}
-                  className={`w-full bg-[#1a1a1a] border rounded-lg px-3 py-2 text-sm focus:outline-none transition ${
+                  className={`w-full bg-[#1a1a1a] border rounded-lg px-3 py-2 text-sm text-white focus:outline-none transition ${
                     isEmpty
                       ? "border-red-800 focus:border-red-500"
                       : "border-[#333] focus:border-purple-500"

@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Tailwind v4 doesn't auto-inherit color on form elements — force it */
+input,
+textarea,
+select {
+  color: inherit;
+}
