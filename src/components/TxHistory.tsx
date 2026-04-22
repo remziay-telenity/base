@@ -4,6 +4,7 @@ import { useAccount } from "wagmi";
 import { useTxHistory } from "@/hooks/useTxHistory";
 import { txUrl } from "@/lib/explorer";
 import { Skeleton } from "./LoadingSkeleton";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 function timeAgo(timestamp: string): string {
   const seconds = Math.floor(Date.now() / 1000) - parseInt(timestamp);
@@ -15,6 +16,47 @@ function timeAgo(timestamp: string): string {
 
 function shortHash(hash: string): string {
   return `${hash.slice(0, 8)}…${hash.slice(-6)}`;
+}
+
+interface TxRowProps {
+  tx: { hash: string; timeStamp: string; isError: string };
+  chainId: number | undefined;
+}
+
+function TxRow({ tx, chainId }: TxRowProps) {
+  const { copied, copy } = useCopyToClipboard();
+  return (
+    <div className="flex items-center justify-between py-2 gap-2">
+      <div className="flex items-center gap-1 min-w-0">
+        <a
+          href={txUrl(chainId, tx.hash)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-xs text-blue-400 hover:underline truncate"
+          aria-label={`View transaction ${tx.hash} on Basescan`}
+        >
+          {shortHash(tx.hash)}
+        </a>
+        <button
+          onClick={() => copy(tx.hash)}
+          className="shrink-0 text-xs text-gray-600 hover:text-gray-300 transition"
+          aria-label="Copy transaction hash"
+        >
+          {copied ? "✓" : "⧉"}
+        </button>
+      </div>
+      <span className={`text-xs px-1.5 py-0.5 rounded shrink-0 ${
+        tx.isError === "0"
+          ? "bg-green-950 text-green-400"
+          : "bg-red-950 text-red-400"
+      }`}>
+        {tx.isError === "0" ? "success" : "failed"}
+      </span>
+      <span className="text-xs text-gray-500 tabular-nums shrink-0">
+        {timeAgo(tx.timeStamp)}
+      </span>
+    </div>
+  );
 }
 
 export function TxHistory() {
@@ -67,27 +109,7 @@ export function TxHistory() {
       ) : (
         <div className="divide-y divide-[#1e1e1e]">
           {txs.map((tx) => (
-            <div key={tx.hash} className="flex items-center justify-between py-2 gap-2">
-              <a
-                href={txUrl(chainId, tx.hash)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-mono text-xs text-blue-400 hover:underline"
-                aria-label={`View transaction ${tx.hash} on Basescan`}
-              >
-                {shortHash(tx.hash)}
-              </a>
-              <span className={`text-xs px-1.5 py-0.5 rounded ${
-                tx.isError === "0"
-                  ? "bg-green-950 text-green-400"
-                  : "bg-red-950 text-red-400"
-              }`}>
-                {tx.isError === "0" ? "success" : "failed"}
-              </span>
-              <span className="text-xs text-gray-500 tabular-nums">
-                {timeAgo(tx.timeStamp)}
-              </span>
-            </div>
+            <TxRow key={tx.hash} tx={tx} chainId={chainId} />
           ))}
         </div>
       )}

@@ -5,6 +5,7 @@ import { useAccount, useWaitForTransactionReceipt, useDeployContract } from "wag
 import { COUNTER_ABI, COUNTER_BYTECODE } from "@/lib/contracts";
 import { useDeployedContracts, CONTRACT_MILESTONES } from "@/hooks/useDeployedContracts";
 import { txUrl, addressUrl } from "@/lib/explorer";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import toast from "react-hot-toast";
 import counterArtifact from "@/lib/counterArtifact.json";
 import tokenArtifact from "@/lib/simpleTokenArtifact.json";
@@ -66,6 +67,8 @@ export function DeployContract() {
     useWaitForTransactionReceipt({ hash: txHash });
   const { count, isLoading: statsLoading, error: statsError, refetch: refetchStats } =
     useDeployedContracts();
+  const { copied: copiedTx, copy: copyTx } = useCopyToClipboard();
+  const { copied: copiedAddr, copy: copyAddr } = useCopyToClipboard();
 
   const template = TEMPLATES.find((t) => t.id === selected)!;
 
@@ -208,27 +211,45 @@ export function DeployContract() {
       {txHash && (
         <div className="bg-[#1a1a1a] rounded-lg p-3 text-sm space-y-2">
           <div>
-            <p className="text-gray-400">Deploy transaction:</p>
-            <a
-              href={txUrl(chainId, txHash)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-purple-400 hover:underline font-mono text-xs break-all"
-            >
-              {txHash}
-            </a>
+            <p className="text-gray-400 mb-0.5">Deploy transaction:</p>
+            <div className="flex items-center gap-2">
+              <a
+                href={txUrl(chainId, txHash)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-400 hover:underline font-mono text-xs break-all"
+              >
+                {txHash}
+              </a>
+              <button
+                onClick={() => copyTx(txHash)}
+                className="shrink-0 text-xs text-gray-500 hover:text-gray-300 transition"
+                aria-label="Copy transaction hash"
+              >
+                {copiedTx ? "✓" : "⧉"}
+              </button>
+            </div>
           </div>
           {deployedAddress && (
             <div>
-              <p className="text-gray-400">Contract deployed at:</p>
-              <a
-                href={addressUrl(chainId, deployedAddress)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-green-400 hover:underline font-mono text-xs break-all"
-              >
-                {deployedAddress}
-              </a>
+              <p className="text-gray-400 mb-0.5">Contract deployed at:</p>
+              <div className="flex items-center gap-2">
+                <a
+                  href={addressUrl(chainId, deployedAddress)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-400 hover:underline font-mono text-xs break-all"
+                >
+                  {deployedAddress}
+                </a>
+                <button
+                  onClick={() => copyAddr(deployedAddress)}
+                  className="shrink-0 text-xs text-gray-500 hover:text-gray-300 transition"
+                  aria-label="Copy contract address"
+                >
+                  {copiedAddr ? "✓" : "⧉"}
+                </button>
+              </div>
               <p className="text-green-400 font-medium mt-1">Deployed successfully!</p>
             </div>
           )}
