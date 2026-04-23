@@ -1,13 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { isAddress } from "viem";
-import { useAccount } from "wagmi";
+import { encodeFunctionData, isAddress } from "viem";
+import { useAccount, useSendCalls } from "wagmi";
 import { useContractInteraction } from "@/hooks/useContractInteraction";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { useWalletCapabilities } from "@/hooks/useWalletCapabilities";
 import { txUrl } from "@/lib/explorer";
 import { COUNTER_ABI } from "@/lib/contracts";
 import toast from "react-hot-toast";
+
+const BATCH_SIZE = 3;
 
 export function ContractInteractor() {
   const { address, chainId } = useAccount();
@@ -19,6 +22,14 @@ export function ContractInteractor() {
 
   const { write, txHash, isPending, isConfirming, isSuccess, error, reset } =
     useContractInteraction(validAddr, COUNTER_ABI as never, "increment");
+
+  const { supportsBatching } = useWalletCapabilities();
+  const {
+    sendCalls,
+    data: batchData,
+    isPending: isBatchPending,
+    reset: resetBatch,
+  } = useSendCalls();
 
   const { copied, copy } = useCopyToClipboard();
 
@@ -33,6 +44,19 @@ export function ContractInteractor() {
     if (isSuccess) {
       toast.success("increment() called!");
     }
+  }
+
+  function handleBatchIncrement() {
+    if (!validAddr) {
+      setAddrError("Enter a valid contract address");
+      return;
+    }
+    setAddrError("");
+    resetBatch();
+    const data = encodeFunctionData({ abi: COUNTER_ABI, functionName: "increment" });
+    sendCalls({
+      calls: Array.from({ length: BATCH_SIZE }, () => ({ to: validAddr, data })),
+    });
   }
 
   if (!address) return null;
@@ -78,6 +102,23 @@ export function ContractInteractor() {
           ? "Confirming…"
           : "Call increment()"}
       </button>
+
+      {supportsBatching && (
+        <button
+          onClick={handleBatchIncrement}
+          disabled={!address || isBatchPending}
+          className="w-full bg-blue-700 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg px-4 py-2 font-semibold text-sm transition focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111]"
+          title="Submit 3 increment() calls in a single atomic batch (Base Account / smart wallet)"
+        >
+          {isBatchPending ? "Sending batch…" : `Batch increment() × ${BATCH_SIZE}`}
+        </button>
+      )}
+
+      {batchData && (
+        <p className="text-xs text-green-400">
+          Batch submitted: <span className="font-mono break-all">{batchData.id}</span>
+        </p>
+      )}
 
       {txHash && (
         <div className="bg-[#1a1a1a] rounded-lg p-3 text-xs space-y-1">

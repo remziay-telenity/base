@@ -7,6 +7,8 @@ const mockReset = vi.fn();
 
 vi.mock("wagmi", () => ({
   useAccount: () => ({ address: "0xUser", chainId: 8453 }),
+  useCapabilities: () => ({ data: undefined }),
+  useSendCalls: () => ({ sendCalls: vi.fn(), data: undefined, isPending: false, reset: vi.fn() }),
 }));
 
 vi.mock("@/hooks/useContractInteraction", () => ({
@@ -19,6 +21,10 @@ vi.mock("@/hooks/useContractInteraction", () => ({
     error: null,
     reset: mockReset,
   }),
+}));
+
+vi.mock("@/hooks/useWalletCapabilities", () => ({
+  useWalletCapabilities: () => ({ supportsBatching: false, supportsPaymaster: false }),
 }));
 
 vi.mock("react-hot-toast", () => ({
