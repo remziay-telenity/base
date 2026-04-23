@@ -18,14 +18,13 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Force white text on all inputs — WebKit uses -webkit-text-fill-color
-   which overrides `color`, so we must set both explicitly */
+/* WebKit uses -webkit-text-fill-color which overrides `color`. Keep it
+   in sync with whatever `color` each input sets so inline styles win. */
 input,
 textarea,
 select {
-  color: #fff;
-  -webkit-text-fill-color: #fff;
-  caret-color: #fff;
+  -webkit-text-fill-color: currentColor;
+  caret-color: currentColor;
 }
 
 input::placeholder,
