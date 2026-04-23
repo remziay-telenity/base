@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Base Guild Helper",
   description: "Complete Base Guild roles on-chain",
+  other: {
+    "base:app_id": "69e9db121eb4a1de6a95852a",
+  },
 };
 
 export default function RootLayout({
