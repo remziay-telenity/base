@@ -10,15 +10,35 @@ import toast from "react-hot-toast";
 const EXAMPLE = `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-contract MyContract {
-    string public message;
+contract Calculator {
+    // No storage, no owner, no events — pure math only
 
-    constructor(string memory _message) {
-        message = _message;
+    function add(int256 a, int256 b) public pure returns (int256) {
+        return a + b;
     }
 
-    function setMessage(string memory _message) public {
-        message = _message;
+    function subtract(int256 a, int256 b) public pure returns (int256) {
+        return a - b;
+    }
+
+    function multiply(int256 a, int256 b) public pure returns (int256) {
+        return a * b;
+    }
+
+    function divide(int256 a, int256 b) public pure returns (int256) {
+        require(b != 0, "Cannot divide by zero");
+        return a / b;
+    }
+
+    function power(int256 base, uint256 exp) public pure returns (int256) {
+        int256 result = 1;
+        int256 b = base;
+        while (exp > 0) {
+            if (exp % 2 == 1) result *= b;
+            b *= b;
+            exp /= 2;
+        }
+        return result;
     }
 }`;
 
