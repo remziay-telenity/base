@@ -1,8 +1,8 @@
 # Base Guild Helper
 
-[![CI](https://github.com/remziay-telenity/base/actions/workflows/ci.yml/badge.svg)](https://github.com/remziay-telenity/base/actions/workflows/ci.yml)
+[![CI](https://github.com/remziay/base/actions/workflows/ci.yml/badge.svg)](https://github.com/remziay/base/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/remziay-telenity/base)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/remziay/base)
 
 A web app that helps you complete on-chain roles on [guild.xyz/base](https://guild.xyz/base) — Coinbase's Base network guild.
 
@@ -33,7 +33,7 @@ Connect your wallet → perform the on-chain action → visit [guild.xyz/base](h
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/remziay-telenity/base
+git clone https://github.com/remziay/base
 cd base
 npm install
 ```
@@ -67,7 +67,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/remziay-telenity/base)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/remziay/base)
 
 Add `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` and `NEXT_PUBLIC_BASESCAN_API_KEY` as environment variables in your Vercel project settings.
 

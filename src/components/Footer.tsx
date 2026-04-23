@@ -29,7 +29,7 @@ export function Footer() {
           </a>
         </div>
         <a
-          href="https://github.com/remziay-telenity/base"
+          href="https://github.com/remziay/base"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 hover:text-gray-300 transition"

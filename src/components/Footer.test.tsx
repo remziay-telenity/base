@@ -34,6 +34,6 @@ describe("Footer", () => {
   it("GitHub link points to the correct repo", () => {
     render(<Footer />);
     const ghLink = screen.getByRole("link", { name: /Open source on GitHub/i });
-    expect(ghLink).toHaveAttribute("href", "https://github.com/remziay-telenity/base");
+    expect(ghLink).toHaveAttribute("href", "https://github.com/remziay/base");
   });
 });

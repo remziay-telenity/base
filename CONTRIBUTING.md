@@ -5,7 +5,7 @@ Thanks for helping build this! Here's how to get started.
 ## Development setup
 
 ```bash
-git clone https://github.com/remziay-telenity/base
+git clone https://github.com/remziay/base
 cd base
 npm install
 cp .env.local.example .env.local   # fill in your keys
