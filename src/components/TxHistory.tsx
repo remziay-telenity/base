@@ -54,15 +54,7 @@ export function TxHistory() {
   const apiKey = process.env.NEXT_PUBLIC_BASESCAN_API_KEY || "";
 
   if (!apiKey) {
-    return (
-      <div className="bg-[#111] border border-[#222] rounded-2xl p-5">
-        <h3 className="font-semibold text-sm mb-2">Recent Transactions</h3>
-        <p className="text-xs text-gray-500">
-          Add <code className="text-gray-400">NEXT_PUBLIC_BASESCAN_API_KEY</code> to{" "}
-          <code className="text-gray-400">.env.local</code> to see your transaction history.
-        </p>
-      </div>
-    );
+    return null;
   }
 
   return (

@@ -74,9 +74,8 @@ describe("TxHistory — without API key", () => {
     process.env.NEXT_PUBLIC_BASESCAN_API_KEY = "";
   });
 
-  it("shows setup instructions when API key is missing", () => {
-    render(<TxHistory />);
-    expect(screen.getByText("Recent Transactions")).toBeInTheDocument();
-    expect(screen.getByText(/NEXT_PUBLIC_BASESCAN_API_KEY/)).toBeInTheDocument();
+  it("renders nothing when API key is missing", () => {
+    const { container } = render(<TxHistory />);
+    expect(container.firstChild).toBeNull();
   });
 });
