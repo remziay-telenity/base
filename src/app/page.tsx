@@ -18,6 +18,7 @@ import { CounterReader } from "@/components/CounterReader";
 import { GuildRoleStatus } from "@/components/GuildRoleStatus";
 import { CustomContractDeployer } from "@/components/CustomContractDeployer";
 import { DonationBox } from "@/components/DonationBox";
+import { TokenSwap } from "@/components/TokenSwap";
 
 const GUILD_ROLES = [
   {
@@ -156,6 +157,7 @@ export default function Home() {
             <div className="space-y-4">
               <h2 className="text-base font-semibold text-gray-300">On-chain Actions</h2>
               <SendTransaction />
+              <TokenSwap />
               <DeployContract />
               <ContractInteractor />
               <CounterReader />
